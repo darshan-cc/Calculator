@@ -3,52 +3,290 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Internship Calculator Project</title>
-    <link rel="stylesheet" href="style.css" />
+    <title>Premium Scientific Calculator</title>
+    <style>
+      /* Base Reset & Centering */
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        font-family:
+          "Inter",
+          -apple-system,
+          BlinkMacSystemFont,
+          "Segoe UI",
+          Roboto,
+          sans-serif;
+      }
+
+      body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        background-color: #f0f2f5; /* Clean, light off-white background */
+      }
+
+      /* Calculator Body */
+      .calculator {
+        background-color: #2b2d31; /* Matte black/dark grey */
+        width: 340px;
+        padding: 25px 20px;
+        border-radius: 20px;
+        box-shadow:
+          0 20px 40px rgba(0, 0, 0, 0.2),
+          inset 0 1px 1px rgba(255, 255, 255, 0.1);
+      }
+
+      /* Branding/Header area */
+      .brand {
+        color: #a0a4a8;
+        font-size: 12px;
+        font-weight: 600;
+        letter-spacing: 1px;
+        margin-bottom: 15px;
+        text-transform: uppercase;
+      }
+
+      /* LCD Screen */
+      .screen-container {
+        background-color: #e0e5db; /* Classic LCD greenish-grey */
+        border-radius: 8px;
+        padding: 15px;
+        margin-bottom: 25px;
+        box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.1);
+        text-align: right;
+        border: 2px solid #1a1b1e;
+      }
+
+      .screen-equation {
+        min-height: 20px;
+        color: #555;
+        font-size: 14px;
+        margin-bottom: 5px;
+        word-break: break-all;
+      }
+
+      .screen-result {
+        color: #111;
+        font-size: 32px;
+        font-family: "Courier New", Courier, monospace;
+        font-weight: bold;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      /* Button Grid Layouts */
+      .sci-pad {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 8px;
+        margin-bottom: 15px;
+      }
+
+      .main-pad {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 10px;
+      }
+
+      /* Standard Button Styling */
+      button {
+        border: none;
+        outline: none;
+        cursor: pointer;
+        border-radius: 30px; /* Oval/Round buttons */
+        height: 40px;
+        font-size: 14px;
+        font-weight: 500;
+        transition: all 0.1s ease;
+        box-shadow: 0 3px 0 rgba(0, 0, 0, 0.2);
+      }
+
+      button:active {
+        transform: translateY(3px);
+        box-shadow: 0 0px 0 rgba(0, 0, 0, 0.2);
+      }
+
+      /* Specific Button Types */
+      .btn-sci {
+        background-color: #3b3e45;
+        color: #fff;
+        height: 30px; /* Slightly smaller for top row */
+        font-size: 12px;
+      }
+
+      .btn-num {
+        background-color: #f2f2f2;
+        color: #111;
+        font-size: 16px;
+        font-weight: 600;
+      }
+
+      .btn-op {
+        background-color: #e0e0e0;
+        color: #111;
+      }
+
+      .btn-del {
+        background-color: #e85d5d;
+        color: white;
+      }
+
+      .btn-ac {
+        background-color: #4a5463;
+        color: white;
+      }
+
+      .btn-accent {
+        background-color: #306ee8; /* The blue accent key from the image */
+        color: white;
+      }
+
+      /* Adjust equals button to match style */
+      .btn-equals {
+        background-color: #111;
+        color: white;
+        border: 1px solid #444;
+      }
+    </style>
   </head>
   <body>
-    <div class="calculator-container">
-      <h2>JS Calculator</h2>
+    <div class="calculator">
+      <div class="brand">Scientific Model</div>
 
-      <form id="calcForm">
-        <div class="input-group">
-          <input type="number" id="num1" placeholder="First Number" value="0" />
-          <input
-            type="number"
-            id="num2"
-            placeholder="Second Number"
-            value="0"
-          />
-        </div>
+      <div class="screen-container">
+        <div class="screen-equation" id="equation"></div>
+        <div class="screen-result" id="result">0</div>
+      </div>
 
-        <hr />
+      <div class="sci-pad">
+        <button class="btn-sci btn-accent" onclick="insert('SHIFT')">
+          SHIFT
+        </button>
+        <button class="btn-sci" onclick="insert('Math.sin(')">sin</button>
+        <button class="btn-sci" onclick="insert('Math.cos(')">cos</button>
+        <button class="btn-sci" onclick="insert('Math.tan(')">tan</button>
+        <button class="btn-sci" onclick="insert('Math.log10(')">log</button>
 
-        <div class="results-grid">
-          <div class="result-row">
-            <span class="operator">+</span>
-            <span class="output-val" id="result-add">0</span>
-          </div>
+        <button class="btn-sci" onclick="insert('Math.sqrt(')">√</button>
+        <button class="btn-sci" onclick="insert('**2')">x²</button>
+        <button class="btn-sci" onclick="insert('**')">^</button>
+        <button class="btn-sci" onclick="insert('(')">(</button>
+        <button class="btn-sci" onclick="insert(')')">)</button>
+      </div>
 
-          <div class="result-row">
-            <span class="operator">-</span>
-            <span class="output-val" id="result-sub">0</span>
-          </div>
+      <div class="main-pad">
+        <button class="btn-num" onclick="insert('7')">7</button>
+        <button class="btn-num" onclick="insert('8')">8</button>
+        <button class="btn-num" onclick="insert('9')">9</button>
+        <button class="btn-del" onclick="deleteLast()">DEL</button>
+        <button class="btn-ac" onclick="clearScreen()">AC</button>
 
-          <div class="result-row">
-            <span class="operator">×</span>
-            <span class="output-val" id="result-mul">0</span>
-          </div>
+        <button class="btn-num" onclick="insert('4')">4</button>
+        <button class="btn-num" onclick="insert('5')">5</button>
+        <button class="btn-num" onclick="insert('6')">6</button>
+        <button class="btn-op" onclick="insert('*')">×</button>
+        <button class="btn-op" onclick="insert('/')">÷</button>
 
-          <div class="result-row">
-            <span class="operator">÷</span>
-            <span class="output-val" id="result-div">0</span>
-          </div>
-        </div>
+        <button class="btn-num" onclick="insert('1')">1</button>
+        <button class="btn-num" onclick="insert('2')">2</button>
+        <button class="btn-num" onclick="insert('3')">3</button>
+        <button class="btn-op" onclick="insert('+')">+</button>
+        <button class="btn-op" onclick="insert('-')">−</button>
 
-        <button type="button" id="clearBtn" class="clear-btn">Clear</button>
-      </form>
+        <button class="btn-num" onclick="insert('0')">0</button>
+        <button class="btn-num" onclick="insert('.')">.</button>
+        <button class="btn-op" onclick="insert('*10**')">×10ˣ</button>
+        <button class="btn-op" onclick="insert('Ans')">Ans</button>
+        <button class="btn-equals" onclick="calculate()">=</button>
+      </div>
     </div>
 
-    <script src="script.js"></script>
+    <script>
+      const resultDisplay = document.getElementById("result");
+      const equationDisplay = document.getElementById("equation");
+      let currentInput = "";
+      let lastAnswer = "0";
+
+      function updateScreen() {
+        // Clean up the visual display for the user while keeping JS math logic intact
+        let visualInput = currentInput
+          .replace(/Math\.sin\(/g, "sin(")
+          .replace(/Math\.cos\(/g, "cos(")
+          .replace(/Math\.tan\(/g, "tan(")
+          .replace(/Math\.log10\(/g, "log(")
+          .replace(/Math\.sqrt\(/g, "√(")
+          .replace(/\*\*/g, "^")
+          .replace(/\*/g, "×")
+          .replace(/\//g, "÷");
+
+        resultDisplay.innerText = visualInput || "0";
+      }
+
+      function insert(value) {
+        if (value === "SHIFT") return; // Placeholder for future logic
+        if (value === "Ans") {
+          currentInput += lastAnswer;
+        } else {
+          currentInput += value;
+        }
+        updateScreen();
+      }
+
+      function clearScreen() {
+        currentInput = "";
+        equationDisplay.innerText = "";
+        updateScreen();
+      }
+
+      function deleteLast() {
+        // Remove the last character, or specific math strings if needed
+        if (
+          currentInput.endsWith("Math.sin(") ||
+          currentInput.endsWith("Math.cos(") ||
+          currentInput.endsWith("Math.tan(")
+        ) {
+          currentInput = currentInput.slice(0, -9);
+        } else if (currentInput.endsWith("Math.sqrt(")) {
+          currentInput = currentInput.slice(0, -10);
+        } else {
+          currentInput = currentInput.slice(0, -1);
+        }
+        updateScreen();
+      }
+
+      function calculate() {
+        if (!currentInput) return;
+
+        try {
+          // Update the top equation line before calculating
+          let visualEquation = currentInput
+            .replace(/Math\.sin\(/g, "sin(")
+            .replace(/Math\.cos\(/g, "cos(")
+            .replace(/Math\.tan\(/g, "tan(")
+            .replace(/Math\.log10\(/g, "log(")
+            .replace(/Math\.sqrt\(/g, "√(")
+            .replace(/\*\*/g, "^")
+            .replace(/\*/g, "×")
+            .replace(/\//g, "÷");
+          equationDisplay.innerText = visualEquation + " =";
+
+          // Evaluate the expression
+          // Note: Using Function constructor is safer than direct eval()
+          let result = new Function("return " + currentInput)();
+
+          // Handle rounding issues (e.g. 0.1 + 0.2)
+          result = Math.round(result * 10000000000) / 10000000000;
+
+          resultDisplay.innerText = result;
+          lastAnswer = result;
+          currentInput = result.toString();
+        } catch (error) {
+          resultDisplay.innerText = "Syntax Error";
+          currentInput = "";
+        }
+      }
+    </script>
   </body>
 </html>
